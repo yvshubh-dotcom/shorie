@@ -17,7 +17,7 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ── Database ─────────────────────────────────────────────────
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => { console.error('❌ MongoDB error:', err); process.exit(1); });
 
@@ -38,7 +38,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
+    mongoUrl: process.env.MONGO_URI,
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
