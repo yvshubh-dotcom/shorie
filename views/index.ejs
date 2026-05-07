@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+<div class="min-h-screen flex flex-col">
+  <!-- Nav -->
+  <nav class="flex items-center justify-between px-6 sm:px-10 py-5">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center font-bold text-white text-lg">S</div>
+      <span class="font-bold text-xl gradient-text">Shortie</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/auth/login" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Login</a>
+      <a href="/auth/signup" class="bg-brand-500 hover:bg-brand-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <main class="flex-1 flex items-center justify-center px-6 py-20">
+    <div class="text-center max-w-4xl mx-auto">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-xs text-brand-400 font-medium mb-8 border border-brand-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse-slow inline-block"></span>
+        Link monetization platform
+      </div>
+
+      <h1 class="text-5xl sm:text-7xl font-bold leading-tight mb-6">
+        Turn every link into<br/>
+        <span class="gradient-text">real earnings</span>
+      </h1>
+
+      <p class="text-lg text-gray-400 max-w-xl mx-auto mb-10">
+        Shorten URLs, share anywhere, earn money on every click. Join thousands of creators monetizing their traffic.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <a href="/auth/signup" class="w-full sm:w-auto bg-brand-500 hover:bg-brand-400 text-white font-bold px-8 py-4 rounded-xl text-base transition-all hover:scale-105 shadow-lg shadow-brand-500/25">
+          Start Earning Free →
+        </a>
+        <a href="/auth/login" class="w-full sm:w-auto glass glass-hover text-gray-300 font-medium px-8 py-4 rounded-xl text-base transition-all">
+          Sign In
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-6 max-w-lg mx-auto">
+        <% const stats = [['$2.00', 'Per 1K clicks'], ['∞', 'Free links'], ['24h', 'Fast payouts']] %>
+        <% stats.forEach(([val, label]) => { %>
+        <div class="glass rounded-2xl p-4">
+          <p class="text-2xl font-bold gradient-text mb-1"><%= val %></p>
+          <p class="text-xs text-gray-500"><%= label %></p>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </main>
+
+  <!-- Features -->
+  <section class="px-6 sm:px-10 pb-20">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <% const features = [
+        { icon: '⛓', title: 'Smart URL Shortener', desc: 'Create branded short links with custom codes. Track every click in real time.' },
+        { icon: '◎', title: 'Monetize Clicks', desc: 'Earn money every time someone visits your link. CPM-based transparent payouts.' },
+        { icon: '↑', title: 'Easy Withdrawals', desc: 'Withdraw via UPI, PayPal, or Binance. Minimum $5 threshold.' },
+      ] %>
+      <% features.forEach(f => { %>
+      <div class="glass card-glow rounded-2xl p-6 hover:border-brand-500/30 transition-all">
+        <div class="text-3xl mb-4"><%= f.icon %></div>
+        <h3 class="font-semibold text-white mb-2"><%= f.title %></h3>
+        <p class="text-sm text-gray-500 leading-relaxed"><%= f.desc %></p>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5 px-6 py-6 text-center text-xs text-gray-600">
+    © 2024 Shortie. Built for creators.
+  </footer>
+</div>
+<%- include('partials/footer') %>

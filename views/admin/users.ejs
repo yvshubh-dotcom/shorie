@@ -1,0 +1,83 @@
+<%- include('layout-top') %>
+
+    <main class="flex-1 p-4 sm:p-6 animate-fade-up space-y-5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold">Users <span class="text-gray-500 text-base font-normal">(<%= total %>)</span></h2>
+      </div>
+
+      <!-- Search -->
+      <form method="GET" class="flex gap-3">
+        <input type="text" name="search" value="<%= search %>" placeholder="Search by username or email..."
+          class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500/60 transition-all"/>
+        <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-all">Search</button>
+      </form>
+
+      <div class="glass rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-white/5">
+                <th class="text-left px-5 py-3 text-xs text-gray-500">User</th>
+                <th class="text-left px-4 py-3 text-xs text-gray-500">Email</th>
+                <th class="text-right px-4 py-3 text-xs text-gray-500">Balance</th>
+                <th class="text-right px-4 py-3 text-xs text-gray-500">Clicks</th>
+                <th class="text-right px-4 py-3 text-xs text-gray-500">Status</th>
+                <th class="text-right px-4 py-3 text-xs text-gray-500">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <% users.forEach(u => { %>
+              <tr class="hover:bg-white/2 transition-colors">
+                <td class="px-5 py-3.5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-brand-500/10 flex items-center justify-center text-xs font-bold text-brand-400">
+                      <%= u.username.charAt(0).toUpperCase() %>
+                    </div>
+                    <span class="font-medium"><%= u.username %></span>
+                    <% if (u.isAdmin) { %><span class="text-xs bg-yellow-500/10 text-yellow-400 px-1.5 py-0.5 rounded">Admin</span><% } %>
+                  </div>
+                </td>
+                <td class="px-4 py-3.5 text-gray-500 text-xs"><%= u.email %></td>
+                <td class="px-4 py-3.5 text-right text-brand-400 font-mono text-xs">$<%= (u.balance || 0).toFixed(4) %></td>
+                <td class="px-4 py-3.5 text-right"><%= (u.totalClicks || 0).toLocaleString() %></td>
+                <td class="px-4 py-3.5 text-right">
+                  <span class="text-xs px-2 py-0.5 rounded-full <%= u.isBanned ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400' %>">
+                    <%= u.isBanned ? 'Banned' : 'Active' %>
+                  </span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <div class="flex items-center justify-end gap-2">
+                    <!-- Custom CPM -->
+                    <form action="/admin/users/<%= u._id %>/cpm" method="POST" class="flex gap-1">
+                      <input type="number" name="cpmRate" value="<%= u.cpmRate || '' %>" step="0.01" placeholder="CPM"
+                        class="w-20 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-brand-500/60"/>
+                      <button type="submit" class="text-xs text-gray-400 hover:text-brand-400 bg-white/5 px-2 py-1 rounded-lg transition-colors">Set</button>
+                    </form>
+                    <% if (!u.isAdmin) { %>
+                    <form action="/admin/users/<%= u._id %>/ban" method="POST" onsubmit="return confirm('<%= u.isBanned ? 'Unban' : 'Ban' %> this user?')">
+                      <button type="submit" class="text-xs <%= u.isBanned ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300' %> bg-white/5 px-2.5 py-1 rounded-lg transition-colors">
+                        <%= u.isBanned ? 'Unban' : 'Ban' %>
+                      </button>
+                    </form>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+      <div class="flex items-center justify-center gap-2">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/admin/users?page=<%= i %><%= search ? '&search=' + search : '' %>"
+           class="w-9 h-9 rounded-lg flex items-center justify-center text-sm <%= i === page ? 'bg-brand-500 text-white' : 'glass text-gray-400 glass-hover' %>"><%= i %></a>
+        <% } %>
+      </div>
+      <% } %>
+    </main>
+
+<%- include('layout-bottom') %>

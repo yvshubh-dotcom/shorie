@@ -1,0 +1,25 @@
+<script>
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const colors = { success: 'bg-green-900/80 border-green-500/50 text-green-300', error: 'bg-red-900/80 border-red-500/50 text-red-300', info: 'bg-blue-900/80 border-blue-500/50 text-blue-300' };
+  toast.className = `toast glass border ${colors[type] || colors.info} px-5 py-3 rounded-xl mb-3 flex items-center gap-3 text-sm font-medium min-w-72 max-w-sm shadow-2xl`;
+  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  toast.innerHTML = `<span class="text-lg">${icons[type]}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)'; toast.style.transition = 'all 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
+}
+
+function copyToClipboard(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<span>✓ Copied!</span>';
+    btn.classList.add('text-green-400');
+    showToast('Link copied to clipboard!', 'success');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('text-green-400'); }, 2000);
+  });
+}
+</script>
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 glass border-r border-white/5 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0">
+  <!-- Logo -->
+  <div class="flex items-center gap-3 px-6 py-5 border-b border-white/5">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">S</div>
+    <span class="font-bold text-xl tracking-tight gradient-text">Shortie</span>
+    <button onclick="closeSidebar()" class="ml-auto lg:hidden text-gray-500 hover:text-white">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- User Info -->
+  <div class="px-4 py-4 border-b border-white/5">
+    <div class="flex items-center gap-3 px-2">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-sm font-bold">
+        <%= user.username.charAt(0).toUpperCase() %>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold truncate"><%= user.username %></p>
+        <p class="text-xs text-gray-500 truncate"><%= user.email %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    <% const navItems = [
+      { href: '/dashboard', icon: '⊞', label: 'Dashboard' },
+      { href: '/links/create', icon: '+', label: 'Create Link' },
+      { href: '/links', icon: '⛓', label: 'My Links' },
+      { href: '/earnings', icon: '◎', label: 'Earnings' },
+      { href: '/earnings/withdraw', icon: '↑', label: 'Withdraw' },
+    ]; %>
+
+    <% navItems.forEach(item => { %>
+      <a href="<%= item.href %>"
+         class="sidebar-link flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 font-medium <%= currentPath === item.href || (item.href !== '/dashboard' && currentPath.startsWith(item.href)) ? 'active' : '' %>">
+        <span class="text-base w-5 text-center"><%= item.icon %></span>
+        <%= item.label %>
+      </a>
+    <% }) %>
+
+    <div class="pt-2 border-t border-white/5 mt-2">
+      <a href="/dashboard/settings"
+         class="sidebar-link flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 font-medium <%= currentPath === '/dashboard/settings' ? 'active' : '' %>">
+        <span class="text-base w-5 text-center">⚙</span> Settings
+      </a>
+
+      <% if (user.isAdmin) { %>
+      <a href="/admin" class="sidebar-link flex items-center gap-3 px-4 py-2.5 text-sm text-yellow-400 font-medium">
+        <span class="text-base w-5 text-center">★</span> Admin Panel
+      </a>
+      <% } %>
+
+      <a href="/auth/logout" class="sidebar-link flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 font-medium">
+        <span class="text-base w-5 text-center">→</span> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Balance Badge -->
+  <div class="px-4 pb-5">
+    <div class="glass rounded-xl p-4">
+      <p class="text-xs text-gray-500 mb-1">Available Balance</p>
+      <p class="text-2xl font-bold gradient-text">$<%= (user.balance || 0).toFixed(4) %></p>
+      <a href="/earnings/withdraw" class="mt-2 block text-center text-xs bg-brand-500/20 hover:bg-brand-500/30 text-brand-400 rounded-lg py-1.5 transition-colors">Withdraw</a>
+    </div>
+  </div>
+</aside>
+
+<!-- Overlay -->
+<div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden backdrop-blur-sm"></div>
+
+<script>
+function openSidebar() {
+  document.getElementById('sidebar').classList.remove('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.remove('hidden');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.add('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.add('hidden');
+}
+</script>

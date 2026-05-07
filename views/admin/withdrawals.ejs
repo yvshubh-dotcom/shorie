@@ -1,0 +1,66 @@
+<%- include('layout-top') %>
+
+    <main class="flex-1 p-4 sm:p-6 animate-fade-up space-y-5">
+      <h2 class="text-xl font-bold">Withdrawal Requests</h2>
+
+      <% if (success) { %><div class="bg-green-500/10 border border-green-500/30 text-green-400 text-sm rounded-xl px-4 py-3">✓ <%= success %></div><% } %>
+      <% if (error) { %><div class="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3">✕ <%= error %></div><% } %>
+
+      <!-- Status filter -->
+      <div class="flex gap-2">
+        <% ['pending', 'approved', 'rejected'].forEach(s => { %>
+        <a href="/admin/withdrawals?status=<%= s %>"
+           class="px-4 py-2 rounded-xl text-sm font-medium transition-all <%= status === s ? 'bg-brand-500 text-white' : 'glass text-gray-400 glass-hover' %>">
+          <%= s.charAt(0).toUpperCase() + s.slice(1) %>
+        </a>
+        <% }) %>
+      </div>
+
+      <div class="glass rounded-2xl overflow-hidden">
+        <% if (withdrawals.length === 0) { %>
+        <div class="text-center py-12 text-gray-600">
+          <p class="text-3xl mb-2">↑</p>
+          <p>No <%= status %> withdrawals</p>
+        </div>
+        <% } else { %>
+        <div class="divide-y divide-white/5">
+          <% withdrawals.forEach(w => { %>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4 px-5 py-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-semibold">$<%= w.amount.toFixed(2) %></span>
+                <span class="text-xs glass px-2 py-0.5 rounded-full text-gray-400"><%= w.paymentMethod.toUpperCase() %></span>
+              </div>
+              <p class="text-sm text-gray-400"><%= w.userId ? w.userId.username : 'Unknown' %> · <%= w.userId ? w.userId.email : '' %></p>
+              <p class="text-xs text-gray-600 font-mono"><%= w.paymentDetails %></p>
+              <p class="text-xs text-gray-700 mt-1"><%= new Date(w.createdAt).toLocaleString() %></p>
+              <% if (w.note) { %><p class="text-xs text-red-400 mt-1">Note: <%= w.note %></p><% } %>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <% if (w.status === 'pending') { %>
+              <form action="/admin/withdrawals/<%= w._id %>/approve" method="POST">
+                <button type="submit" class="text-xs bg-green-500/10 hover:bg-green-500/20 text-green-400 px-3 py-1.5 rounded-lg transition-colors font-medium">
+                  Approve
+                </button>
+              </form>
+              <form action="/admin/withdrawals/<%= w._id %>/reject" method="POST" class="flex gap-1.5" onsubmit="return confirm('Reject and refund?')">
+                <input type="text" name="note" placeholder="Reason (optional)" class="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 focus:outline-none w-28"/>
+                <button type="submit" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition-colors font-medium">
+                  Reject
+                </button>
+              </form>
+              <% } else { %>
+              <span class="text-xs px-2.5 py-1 rounded-full font-medium
+                <%= w.status === 'approved' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400' %>">
+                <%= w.status %>
+              </span>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </main>
+
+<%- include('layout-bottom') %>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eefbf3',
+              100: '#d6f5e3',
+              200: '#b0eacb',
+              300: '#7dd9aa',
+              400: '#48c082',
+              500: '#25a565',
+              600: '#178551',
+              700: '#136942',
+              800: '#125437',
+              900: '#10452e',
+            },
+          },
+          animation: {
+            'slide-in': 'slideIn 0.3s ease forwards',
+            'fade-up': 'fadeUp 0.4s ease forwards',
+            'pulse-slow': 'pulse 3s ease-in-out infinite',
+          },
+          keyframes: {
+            slideIn: { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(0)' } },
+            fadeUp: { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #080c10; font-family: 'Space Grotesk', sans-serif; }
+    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.07); }
+    .glass-hover:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+    .gradient-text { background: linear-gradient(135deg, #48c082, #25a565, #7dd9aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .sidebar-link { transition: all 0.2s ease; border-radius: 10px; }
+    .sidebar-link:hover { background: rgba(37,165,101,0.1); color: #48c082; padding-left: 1.25rem; }
+    .sidebar-link.active { background: rgba(37,165,101,0.15); color: #48c082; border-left: 3px solid #48c082; }
+    .card-glow { box-shadow: 0 0 40px rgba(37,165,101,0.06); }
+    .progress-bar { background: linear-gradient(90deg, #25a565, #48c082, #7dd9aa); }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #0d1117; } ::-webkit-scrollbar-thumb { background: #25a565; border-radius: 4px; }
+    #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+    .toast { animation: fadeUp 0.3s ease; }
+    .noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
+  </style>
+</head>
+<body class="text-gray-100 min-h-screen noise">
+<div id="toast-container"></div>

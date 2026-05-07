@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+<div class="flex min-h-screen">
+  <%- include('../partials/sidebar') %>
+  <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+    <%- include('../partials/navbar') %>
+
+    <main class="flex-1 p-4 sm:p-6 animate-fade-up">
+      <div class="max-w-lg mx-auto">
+        <h2 class="text-xl font-bold mb-6">Account Settings</h2>
+
+        <% if (success) { %>
+        <div class="bg-green-500/10 border border-green-500/30 text-green-400 text-sm rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
+          <span>✓</span> <%= success %>
+        </div>
+        <% } %>
+        <% if (error) { %>
+        <div class="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
+          <span>✕</span> <%= error %>
+        </div>
+        <% } %>
+
+        <!-- Profile -->
+        <div class="glass rounded-2xl p-6 mb-5">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-2xl font-bold">
+              <%= user.username.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+              <p class="font-semibold"><%= user.username %></p>
+              <p class="text-sm text-gray-500"><%= user.email %></p>
+            </div>
+          </div>
+
+          <form action="/dashboard/settings" method="POST" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-400 mb-1.5">Username</label>
+              <input type="text" name="username" value="<%= user.username %>" minlength="3" maxlength="30"
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30 transition-all"/>
+            </div>
+
+            <div class="border-t border-white/5 pt-4">
+              <p class="text-xs font-medium text-gray-400 mb-3">Change Password (leave blank to keep current)</p>
+              <div class="space-y-3">
+                <input type="password" name="currentPassword"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30 transition-all"
+                  placeholder="Current password"/>
+                <input type="password" name="newPassword" minlength="6"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30 transition-all"
+                  placeholder="New password (min 6 chars)"/>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-400 text-white font-semibold py-3 rounded-xl transition-all hover:scale-[1.01]">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Account Info -->
+        <div class="glass rounded-xl px-5 py-4 space-y-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-500">Member since</span>
+            <span><%= new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Total clicks</span>
+            <span><%= (user.totalClicks || 0).toLocaleString() %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Total earnings</span>
+            <span class="gradient-text font-semibold">$<%= (user.totalEarnings || 0).toFixed(4) %></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<%- include('../partials/footer') %>

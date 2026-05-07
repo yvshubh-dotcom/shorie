@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+<div class="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
+  <div class="fixed inset-0 pointer-events-none">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-brand-500/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="absolute top-6 left-6 flex items-center gap-2">
+    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center font-bold text-white text-sm">S</div>
+    <span class="font-bold gradient-text">Shortie</span>
+  </div>
+
+  <div class="w-full max-w-md text-center relative z-10">
+    <!-- Ad placeholder -->
+    <div class="glass rounded-2xl p-6 mb-6 border border-white/5">
+      <p class="text-xs text-gray-600 mb-3">Sponsored</p>
+      <div class="w-full h-24 bg-white/3 rounded-xl flex items-center justify-center mb-3">
+        <p class="text-gray-700 text-xs">Advertisement area</p>
+      </div>
+      <p class="text-xs text-gray-700">Support free link shortening by viewing this ad</p>
+    </div>
+
+    <!-- Final card -->
+    <div class="glass card-glow rounded-3xl p-8">
+      <div class="w-16 h-16 rounded-full bg-brand-500/10 flex items-center justify-center mx-auto mb-5 text-3xl">✓</div>
+      <h1 class="font-bold text-xl mb-2">You're almost there!</h1>
+      <p class="text-gray-500 text-sm mb-2">Destination:</p>
+      <p class="text-xs text-gray-600 font-mono truncate mb-8 px-4 py-2 bg-white/3 rounded-xl"><%= originalUrl %></p>
+
+      <a href="/r/<%= shortCode %>/go"
+        class="block w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-4 rounded-2xl text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-brand-500/25">
+        Go to Destination →
+      </a>
+
+      <p class="text-xs text-gray-700 mt-4">Auto-redirecting in <span id="auto-timer" class="text-brand-400">3</span>s</p>
+    </div>
+  </div>
+</div>
+
+<script>
+let t = 3;
+const el = document.getElementById('auto-timer');
+const int = setInterval(() => {
+  t--;
+  if (el) el.textContent = t;
+  if (t <= 0) { clearInterval(int); window.location.href = '/r/<%= shortCode %>/go'; }
+}, 1000);
+</script>
+<%- include('../partials/footer') %>

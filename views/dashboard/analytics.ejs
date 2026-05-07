@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+<div class="flex min-h-screen">
+  <%- include('../partials/sidebar') %>
+  <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+    <%- include('../partials/navbar') %>
+
+    <main class="flex-1 p-4 sm:p-6 animate-fade-up">
+      <div class="flex items-center gap-3 mb-6">
+        <a href="/links" class="text-gray-500 hover:text-white transition-colors text-sm">← Back</a>
+        <h2 class="text-xl font-bold">Link Analytics</h2>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-5">
+        <!-- Link info -->
+        <div class="glass card-glow rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-gray-500 mb-1">Short Link</p>
+              <div class="flex items-center gap-3 glass rounded-xl px-4 py-3 mb-3">
+                <span class="font-mono text-brand-300 text-sm flex-1 truncate"><%= shortUrl %></span>
+                <button onclick="copyToClipboard('<%= shortUrl %>', this)" class="text-xs text-gray-400 hover:text-brand-400 flex-shrink-0">Copy</button>
+              </div>
+              <p class="text-xs text-gray-600 truncate">→ <%= link.originalUrl %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-bold gradient-text mb-1"><%= link.clicks.toLocaleString() %></p>
+            <p class="text-xs text-gray-500">Total Clicks</p>
+          </div>
+          <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-bold text-blue-400 mb-1">$<%= link.earnings.toFixed(4) %></p>
+            <p class="text-xs text-gray-500">Total Earnings</p>
+          </div>
+          <div class="glass rounded-2xl p-5 text-center col-span-2 sm:col-span-1">
+            <p class="text-3xl font-bold text-purple-400 mb-1">
+              <%= link.clicks > 0 ? '$' + (link.earnings / link.clicks * 1000).toFixed(2) : '$0.00' %>
+            </p>
+            <p class="text-xs text-gray-500">Effective CPM</p>
+          </div>
+        </div>
+
+        <!-- Created date -->
+        <div class="glass rounded-xl px-5 py-4 flex items-center justify-between text-sm">
+          <span class="text-gray-500">Created</span>
+          <span><%= new Date(link.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3">
+          <a href="/links/create" class="flex-1 bg-brand-500 hover:bg-brand-400 text-white text-sm font-semibold py-3 rounded-xl transition-all text-center">
+            Create Another
+          </a>
+          <form action="/links/delete/<%= link._id %>" method="POST" class="flex-1" onsubmit="return confirm('Delete this link?')">
+            <button type="submit" class="w-full glass glass-hover text-red-400 text-sm font-semibold py-3 rounded-xl transition-all">
+              Delete Link
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<%- include('../partials/footer') %>

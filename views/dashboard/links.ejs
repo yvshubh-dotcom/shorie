@@ -1,0 +1,153 @@
+<%- include('../partials/header') %>
+<div class="flex min-h-screen">
+  <%- include('../partials/sidebar') %>
+  <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+    <%- include('../partials/navbar') %>
+
+    <main class="flex-1 p-4 sm:p-6 animate-fade-up">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold">My Links</h2>
+          <p class="text-xs text-gray-500 mt-0.5"><%= total %> total links</p>
+        </div>
+        <a href="/links/create" class="bg-brand-500 hover:bg-brand-400 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all hover:scale-105">
+          + Create
+        </a>
+      </div>
+
+      <% if (success) { %>
+      <div class="bg-green-500/10 border border-green-500/30 text-green-400 text-sm rounded-xl px-4 py-3 mb-4 flex items-center gap-2" data-autohide>
+        <span>✓</span> <%= success %>
+      </div>
+      <% } %>
+
+      <% if (error) { %>
+      <div class="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+        <span>✕</span> <%= error %>
+      </div>
+      <% } %>
+
+      <% if (links.length === 0) { %>
+      <div class="glass rounded-2xl text-center py-20">
+        <p class="text-5xl mb-4">⛓</p>
+        <p class="font-semibold mb-2">No links yet</p>
+        <p class="text-sm text-gray-500 mb-6">Create your first monetized short link</p>
+        <a href="/links/create" class="bg-brand-500 hover:bg-brand-400 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all inline-block">
+          Create First Link
+        </a>
+      </div>
+      <% } else { %>
+
+      <!-- Desktop table -->
+      <div class="hidden sm:block glass rounded-2xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-white/5">
+              <th class="text-left px-5 py-3.5 text-xs font-medium text-gray-500">Link</th>
+              <th class="text-left px-4 py-3.5 text-xs font-medium text-gray-500">Destination</th>
+              <th class="text-right px-4 py-3.5 text-xs font-medium text-gray-500">Clicks</th>
+              <th class="text-right px-4 py-3.5 text-xs font-medium text-gray-500">Earnings</th>
+              <th class="text-right px-4 py-3.5 text-xs font-medium text-gray-500">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <% const baseUrl = (typeof process !== 'undefined' && process.env.SITE_URL) ? process.env.SITE_URL : ''; %>
+            <% links.forEach(link => {
+              const shortUrl = baseUrl + '/r/' + link.shortCode;
+            %>
+            <tr class="hover:bg-white/2 transition-colors">
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400 text-xs flex-shrink-0">⛓</div>
+                  <div class="min-w-0">
+                    <p class="font-mono text-brand-300 text-xs">/r/<%= link.shortCode %></p>
+                    <% if (link.title) { %><p class="text-xs text-gray-600 truncate max-w-32"><%= link.title %></p><% } %>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-4">
+                <p class="text-gray-400 text-xs truncate max-w-xs"><%= link.originalUrl %></p>
+              </td>
+              <td class="px-4 py-4 text-right">
+                <span class="font-semibold"><%= link.clicks.toLocaleString() %></span>
+              </td>
+              <td class="px-4 py-4 text-right">
+                <span class="text-brand-400 font-semibold">$<%= link.earnings.toFixed(4) %></span>
+              </td>
+              <td class="px-4 py-4">
+                <div class="flex items-center justify-end gap-2">
+                  <button data-copy="/r/<%= link.shortCode %>"
+                    class="copy-btn text-xs text-gray-500 hover:text-brand-400 px-2.5 py-1 rounded-lg bg-white/3 hover:bg-white/7 transition-all">
+                    Copy
+                  </button>
+                  <a href="/links/analytics/<%= link._id %>" class="text-xs text-gray-500 hover:text-blue-400 px-2.5 py-1 rounded-lg bg-white/3 hover:bg-white/7 transition-all">
+                    Stats
+                  </a>
+                  <form action="/links/delete/<%= link._id %>" method="POST" onsubmit="return confirm('Delete this link?')">
+                    <button type="submit" class="text-xs text-gray-500 hover:text-red-400 px-2.5 py-1 rounded-lg bg-white/3 hover:bg-white/7 transition-all">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="sm:hidden space-y-3">
+        <% links.forEach(link => { %>
+        <div class="glass rounded-2xl p-4">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <p class="font-mono text-brand-300 text-sm">/r/<%= link.shortCode %></p>
+              <% if (link.title) { %><p class="text-xs text-gray-500"><%= link.title %></p><% } %>
+            </div>
+            <span class="text-xs text-brand-400 font-bold">$<%= link.earnings.toFixed(4) %></span>
+          </div>
+          <p class="text-xs text-gray-600 truncate mb-3"><%= link.originalUrl %></p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-500"><%= link.clicks %> clicks</span>
+            <div class="flex gap-2">
+              <button data-copy="/r/<%= link.shortCode %>" class="copy-btn text-xs text-gray-400 hover:text-brand-400 bg-white/5 px-3 py-1.5 rounded-lg transition-colors">Copy</button>
+              <a href="/links/analytics/<%= link._id %>" class="text-xs text-gray-400 hover:text-blue-400 bg-white/5 px-3 py-1.5 rounded-lg transition-colors">Stats</a>
+              <form action="/links/delete/<%= link._id %>" method="POST" onsubmit="return confirm('Delete?')">
+                <button class="text-xs text-red-400/70 hover:text-red-400 bg-white/5 px-3 py-1.5 rounded-lg transition-colors">Del</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+      <div class="flex items-center justify-center gap-2 mt-6">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/links?page=<%= i %>"
+           class="w-9 h-9 rounded-lg flex items-center justify-center text-sm <%= i === page ? 'bg-brand-500 text-white' : 'glass text-gray-400 hover:text-white glass-hover' %> transition-all">
+          <%= i %>
+        </a>
+        <% } %>
+      </div>
+      <% } %>
+      <% } %>
+    </main>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const path = btn.getAttribute('data-copy');
+    const url = location.origin + path;
+    navigator.clipboard.writeText(url).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('text-brand-400');
+      showToast('Copied: ' + url, 'success');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('text-brand-400'); }, 2000);
+    });
+  });
+});
+</script>
+<%- include('../partials/footer') %>
